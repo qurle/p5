@@ -26,7 +26,6 @@ If you want a standard project structure, you need this:
 1. Create `index.html`, `style.css` and `sketch.js` files.
 2. Copy code from required `<filename>.ts` to `sketch.js`.
 3. Remove module wrapper — `{` on the first line and `}` on the last line.
-4. Remove `//@ts-ignore` directives.
-5. Remove all type usages, if any.
+4. Remove all type usages, if any.
 
 

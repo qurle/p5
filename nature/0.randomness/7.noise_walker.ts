@@ -1,5 +1,5 @@
 {
-	const sketch = (p) => {
+	const sketch = (p: p5) => {
 		{
 			class Walker {
 				x; y; tx; ty
@@ -38,7 +38,7 @@
 			let walkers
 
 			p.setup = () => {
-				p.createCanvas(480, 320)
+				p.createCanvas(p.windowWidth, p.windowHeight)
 				p.colorMode(p.HSB)
 				p.background(100)
 				p.noStroke()
@@ -47,7 +47,7 @@
 			}
 
 			p.draw = () => {
-				p.background(100, .1)
+				p.background(100, .15)
 
 				walkers.forEach((w, i) => {
 					w.step()
@@ -59,6 +59,5 @@
 		}
 	}
 
-	//@ts-expect-error
 	new p5(sketch)
 }

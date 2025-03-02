@@ -1,5 +1,5 @@
 {
-	let sketch = (p) => {
+	const sketch = (p: p5) => {
 		let slider
 
 		p.setup = () => {
@@ -19,7 +19,6 @@
 		}
 	}
 
-	//@ts-expect-error
 	new p5(sketch)
 }
 

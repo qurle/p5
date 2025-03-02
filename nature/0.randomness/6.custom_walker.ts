@@ -1,7 +1,8 @@
 {
-	const sketch = (p) => {
+	const sketch = (p: p5) => {
 		class Walker {
-			x; y
+			x
+			y
 			stepSize = 2
 			radius = 20
 
@@ -9,23 +10,33 @@
 				this.x = p.width / 2
 				this.y = p.height / 2
 			}
+
 			show(color = undefined) {
 				p.fill(color || 0)
 				p.circle(this.x, this.y, this.radius)
 			}
+
 			step() {
-				const mouseDirectionX = Math.sign(p.mouseX - this.x) * this.stepSize
-				const mouseDirectionY = Math.sign(p.mouseY - this.y) * this.stepSize
-				const toMouse = p.random() > .5
-				const xstep = toMouse ? mouseDirectionX : p.random(-this.stepSize, this.stepSize)
-				const ystep = toMouse ? mouseDirectionY : p.random(-this.stepSize, this.stepSize)
+				let xstep = acceptreject(this.stepSize)
+				let ystep = acceptreject(this.stepSize)
 
 				this.x += xstep
 				this.y += ystep
 			}
 		}
 
-		let walker
+		function acceptreject(step: number): number {
+			while (true) {
+				let r1 = p.random(-step, step)
+				let probability = r1 * r1
+				let r2 = p.random(-step, step)
+				if (r2 < probability) {
+					return r1
+				}
+			}
+		}
+
+		let walker: Walker
 
 		p.setup = () => {
 			p.createCanvas(480, 320)
@@ -35,12 +46,11 @@
 		}
 
 		p.draw = () => {
-			p.background(100, .05)
+			p.background(100, 0.05)
 			walker.step()
 			walker.show()
 		}
 	}
 
-	//@ts-expect-error
 	new p5(sketch)
 }

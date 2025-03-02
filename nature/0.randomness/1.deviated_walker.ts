@@ -1,5 +1,5 @@
 {
-	const sketch = (p) => {
+	const sketch = (p: p5) => {
 
 		class Walker {
 			x
@@ -40,7 +40,6 @@
 		}
 	}
 
-	//@ts-expect-error
 	new p5(sketch)
 }
 
