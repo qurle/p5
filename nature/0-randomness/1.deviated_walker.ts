@@ -1,41 +1,46 @@
 {
-	class Walker {
-		x
-		y
-		stepSize = 2
-		radius = 20
+	const sketch = (p) => {
 
-		constructor() {
-			this.x = width / 2
-			this.y = height / 2
-		}
-		show(color = undefined) {
-			fill(color || 0)
-			circle(this.x, this.y, this.radius)
-		}
-		step() {
-			let xstep = random(-this.stepSize, 1.2*this.stepSize)
-			let ystep = random(-this.stepSize, 1.2*this.stepSize)
+		class Walker {
+			x
+			y
+			stepSize = 2
+			radius = 20
 
-			this.x += xstep
-			this.y += ystep
+			constructor() {
+				this.x = p.width / 2
+				this.y = p.height / 2
+			}
+			show(color = undefined) {
+				p.fill(color || 0)
+				p.circle(this.x, this.y, this.radius)
+			}
+			step() {
+				let xstep = p.random(-this.stepSize, 1.2 * this.stepSize)
+				let ystep = p.random(-this.stepSize, 1.2 * this.stepSize)
+
+				this.x += xstep
+				this.y += ystep
+			}
+		}
+
+		let walker
+
+		p.setup = () => {
+			p.createCanvas(480, 320)
+			p.colorMode(p.HSB)
+			p.background(100)
+			walker = new Walker()
+		}
+
+		p.draw = () => {
+			p.background(100, .05)
+			walker.step()
+			walker.show()
 		}
 	}
 
-	let walker
-
-	//@ts-ignore
-	function setup() {
-		createCanvas(480, 320)
-		colorMode(HSB)
-		background(100)
-		walker = new Walker()
-	}
-	
-	//@ts-ignore
-	function draw() {
-		background(100, .05)
-		walker.step()
-		walker.show()
-	}
+	//@ts-expect-error
+	new p5(sketch)
 }
+

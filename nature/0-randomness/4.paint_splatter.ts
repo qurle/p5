@@ -1,22 +1,25 @@
 {
-	let slider
+	let sketch = (p) => {
+		let slider
 
-	//@ts-ignore
-	function setup() {
-		createCanvas(480, 320)
-		background(255)
+		p.setup = () => {
+			p.createCanvas(480, 320)
+			p.background(255)
 
-		slider = createSlider(0, 100, 20)
-		slider.position(20, 20)
+			slider = p.createSlider(0, 100, 20)
+			slider.position(20, 20)
+		}
+
+		p.draw = () => {
+			const x = p.randomGaussian(p.width / 2, slider.value())
+			const y = p.randomGaussian(p.height / 2, slider.value())
+			p.noStroke()
+			p.fill(255, 128 * Math.abs(p.randomGaussian()), 128 * Math.abs(p.randomGaussian()), p.randomGaussian(80))
+			p.circle(x, y, p.randomGaussian(8))
+		}
 	}
 
-	//@ts-ignore
-	function draw() {
-		const x = randomGaussian(width / 2, slider.value())
-		const y = randomGaussian(height / 2, slider.value())
-		noStroke()
-		fill(255, 128 * abs(randomGaussian()), 128 * abs(randomGaussian()), randomGaussian(80))
-		circle(x, y, randomGaussian(8))
-	}
-
+	//@ts-expect-error
+	new p5(sketch)
 }
+

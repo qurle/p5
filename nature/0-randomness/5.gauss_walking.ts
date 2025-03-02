@@ -4,37 +4,40 @@
 		stepSize = 2
 		radius = 20
 
-		constructor() {
-			this.x = width / 2
-			this.y = height / 2
+		constructor(p) {
+			this.x = p.width / 2
+			this.y = p.height / 2
 		}
-		show(color = undefined) {
-			fill(color || 0)
-			circle(this.x, this.y, this.radius)
+		show(p, color = undefined) {
+			p.fill(color || 0)
+			p.circle(this.x, this.y, this.radius)
 		}
-		step() {
-			let xstep = randomGaussian(0, this.stepSize)
-			let ystep = randomGaussian(0, this.stepSize)
+		step(p) {
+			let xstep = p.randomGaussian(0, this.stepSize)
+			let ystep = p.randomGaussian(0, this.stepSize)
 
 			this.x += xstep
 			this.y += ystep
 		}
 	}
 
-	let walker
+	let sketch = (p) => {
+		let walker
 
-	//@ts-ignore
-	function setup() {
-		createCanvas(480, 320)
-		colorMode(HSB)
-		background(100)
-		walker = new Walker()
+		p.setup = () => {
+			p.createCanvas(480, 320)
+			p.colorMode(p.HSB)
+			p.background(100)
+			walker = new Walker(p)
+		}
+
+		p.draw = () => {
+			p.background(100, .05)
+			walker.step(p)
+			walker.show(p)
+		}
 	}
-	
-	//@ts-ignore
-	function draw() {
-		background(100, .05)
-		walker.step()
-		walker.show()
-	}
+
+	//@ts-expect-error
+	new p5(sketch)
 }
