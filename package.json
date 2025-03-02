@@ -1,0 +1,16 @@
+{
+  "name": "p5",
+  "version": "1.0.0",
+  "description": "My playground for p5 projects",
+  "repository": {
+    "url": "https://github.com/qurle/p5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nick Denisov",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/p5": "^1.7.6"
+  }
+}
