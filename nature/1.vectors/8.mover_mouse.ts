@@ -54,7 +54,6 @@
 			}
 		}
 
-
 		let mover: Mover
 		let mover2: Mover
 		let mover3: Mover
