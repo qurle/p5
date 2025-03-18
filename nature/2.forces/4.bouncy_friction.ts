@@ -3,14 +3,16 @@
 	const sketch = (p: p5) => {
 
 		const wind = p.createVector(-5, 0)
+		const bounceCoef = 0.9
 
 		class Environment {
 			children: Mover[]
 			forces: p5.Vector[] = []
+			frictionCoef = 1
 
 			constructor(movers: Mover[]) {
 				this.children = movers
-				const gravity = p.createVector()
+				const gravity = p.createVector(0, 2)
 				this.forces.push(gravity)
 			}
 
@@ -28,7 +30,7 @@
 						child.applyForce(wind)
 					}
 
-					const friction = child.velocity.copy().normalize().mult(-1)
+					const friction = child.velocity.copy().normalize().mult(-this.frictionCoef)
 					child.applyForce(friction)
 				}
 			}
@@ -79,11 +81,20 @@
 			}
 
 			bounceEdges() {
-				if (Math.abs(0.5 * p.width - this.position.x) > 0.45 * p.width) {
-					this.applyForce(p.createVector(0.25 * (p.width / 2 - this.position.x), 0))
+				if (this.position.x > p.width - this.radius) {
+					this.position.x = p.width - this.radius
+					this.velocity.x *= -bounceCoef
+				} else if (this.position.x < this.radius) {
+					this.position.x = this.radius
+					this.velocity.x *= -bounceCoef
 				}
-				if (Math.abs(0.5 * p.height - this.position.y) > 0.45 * p.height)
-					this.applyForce(p.createVector(0, 0.25 * (p.height / 2 - this.position.y)))
+				if (this.position.y > p.height - this.radius) {
+					this.position.y = p.height - this.radius
+					this.velocity.y *= -bounceCoef
+				} else if (this.position.y < this.radius) {
+					this.position.y = this.radius
+					this.velocity.y *= -bounceCoef
+				}
 			}
 		}
 

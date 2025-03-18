@@ -2,11 +2,12 @@
 
 	const sketch = (p: p5) => {
 
-		const wind = p.createVector(-5, 0)
+		const bounceCoef = 0.9
 
 		class Environment {
 			children: Mover[]
 			forces: p5.Vector[] = []
+			frictionCoef = 1
 
 			constructor(movers: Mover[]) {
 				this.children = movers
@@ -24,13 +25,27 @@
 					for (const force of this.forces)
 						child.applyForce(force)
 
+					// Tug
 					if (p.mouseIsPressed) {
-						child.applyForce(wind)
+						const mouse = p.createVector(p.mouseX, p.mouseY)
+						const tug = mouse.copy().sub(child.position).mult(.03)
+						child.applyForce(tug)
+
+						this.drawTug(child.position, mouse)
 					}
 
-					const friction = child.velocity.copy().normalize().mult(-1)
+					const friction = child.velocity.copy().normalize().mult(-this.frictionCoef)
 					child.applyForce(friction)
 				}
+			}
+
+			drawTug(from:p5.Vector, to:p5.Vector){
+				p.push()
+				p.fill(12)
+				p.stroke(255, 60)
+				p.line(from.x, from.y, to.x, to.y)
+				p.circle(to.x, to.y, 20)
+				p.pop()
 			}
 		}
 
@@ -43,7 +58,7 @@
 			mass = 25
 			history = []
 
-			constructor(mass = 25, color = p.color(250)) {
+			constructor(mass = 25, color = p.color('#CF0')) {
 				this.position = p.createVector(p.random(0, p.width), p.random(0, p.height))
 				this.velocity = p.createVector()
 				this.acceleration = p.createVector()
@@ -51,7 +66,7 @@
 				this.mass = mass
 				this.radius = 15 * Math.sqrt(this.mass / Math.PI)
 			}
-			update() {
+			update(color = this.color) {
 				this.bounceEdges()
 
 				this.velocity.add(this.acceleration)
@@ -65,7 +80,7 @@
 					this.history.splice(0, 1)
 				}
 
-				this.show(this.color)
+				this.show(color)
 
 			}
 
@@ -74,16 +89,25 @@
 			}
 
 			show(color) {
-				p.stroke(color)
+				p.fill(color)
 				p.circle(this.position.x, this.position.y, this.radius)
 			}
 
 			bounceEdges() {
-				if (Math.abs(0.5 * p.width - this.position.x) > 0.45 * p.width) {
-					this.applyForce(p.createVector(0.25 * (p.width / 2 - this.position.x), 0))
+				if (this.position.x > p.width - this.radius) {
+					this.position.x = p.width - this.radius
+					this.velocity.x *= -bounceCoef
+				} else if (this.position.x < this.radius) {
+					this.position.x = this.radius
+					this.velocity.x *= -bounceCoef
 				}
-				if (Math.abs(0.5 * p.height - this.position.y) > 0.45 * p.height)
-					this.applyForce(p.createVector(0, 0.25 * (p.height / 2 - this.position.y)))
+				if (this.position.y > p.height - this.radius) {
+					this.position.y = p.height - this.radius
+					this.velocity.y *= -bounceCoef
+				} else if (this.position.y < this.radius) {
+					this.position.y = this.radius
+					this.velocity.y *= -bounceCoef
+				}
 			}
 		}
 
@@ -93,16 +117,16 @@
 		p.setup = () => {
 			p.createCanvas(p.windowWidth, p.windowHeight)
 			p.background(12)
-			p.noFill()
+			p.noStroke()
 			mover = new Mover(10)
 			env = new Environment([mover])
 		}
 
 		p.draw = () => {
-			p.background(12)
+			p.background(12, 190)
 
 			env.update()
-			mover.update()
+			mover.update(p.mouseIsPressed? p.color('#CF0'):  p.color('#a0c724'))
 		}
 
 		p.windowResized = () => {
